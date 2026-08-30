@@ -219,6 +219,14 @@ macOS Apple Silicon, and macOS Intel downloads whenever a version tag is pushed.
 - Only files returned by the latest scan are eligible for deletion.
 - Each candidate is rechecked immediately before deletion.
 
+## Support the project
+
+Image Deduper is free and open source. If it saves you time, you can support
+continued development. Support is optional and does not unlock features.
+
+[![Sponsor on GitHub](https://img.shields.io/badge/GitHub_Sponsors-Support-EA4AAA?logo=githubsponsors&logoColor=white)](https://github.com/sponsors/designlook)
+[![Buy Me a Coffee](https://img.shields.io/badge/Buy_Me_a_Coffee-Support-FFDD00?logo=buymeacoffee&logoColor=000000)](https://buymeacoffee.com/3ubdnxapag)
+
 ## License
 
 [MIT](LICENSE)
