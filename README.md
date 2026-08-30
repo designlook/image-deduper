@@ -51,6 +51,7 @@ Download the newest version from the
 | Windows 10/11, x64 | [Windows installer](https://github.com/designlook/image-deduper/releases/latest/download/ImageDeduper-Windows-x64-Setup.exe) |
 | macOS, Apple Silicon | [Apple Silicon ZIP](https://github.com/designlook/image-deduper/releases/latest/download/ImageDeduper-macOS-arm64.zip) |
 | macOS, Intel | [Intel Mac ZIP](https://github.com/designlook/image-deduper/releases/latest/download/ImageDeduper-macOS-x64.zip) |
+| Node.js 22+ | [CLI package](https://github.com/designlook/image-deduper/releases/latest/download/ImageDeduper-Node-CLI.tgz) |
 
 Checksums are published with every release in `SHA256SUMS.txt`.
 
@@ -64,19 +65,63 @@ install Node.js, npm, Electron, or a browser.**
 | Windows x64 installer | You have a typical 64-bit Windows 10 or 11 PC | Image Deduper, Electron, Chromium, and Node.js runtime | Windows 10/11 on an Intel or AMD 64-bit processor |
 | macOS Apple Silicon (`arm64`) | About This Mac shows an Apple M-series chip | Image Deduper, Electron, Chromium, and the ARM64 Node.js runtime | An M1-or-newer Mac and the one-time unsigned-app approval described below |
 | macOS Intel (`x64`) | About This Mac shows an Intel processor | Image Deduper, Electron, Chromium, and the Intel Node.js runtime | An Intel Mac and the one-time unsigned-app approval described below |
-| Source code | You want to inspect, modify, or build the app yourself | JavaScript, HTML, CSS, scanner, packaging configuration, and release workflow | Git, Node.js 22+, and npm; macOS packages must be built on macOS |
+| Node.js CLI | You prefer a terminal, script, or JSON output | The same local scanner with preview-first deletion controls | Node.js 22+; no npm dependencies are required |
+| Source code | You want to inspect, modify, or build the app yourself | JavaScript, HTML, CSS, scanner, CLI, packaging configuration, and release workflow | Git, Node.js 22+, and npm; macOS packages must be built on macOS |
 
 The desktop versions have the same interface and scanning features. The only
 difference is the operating system and processor architecture they are built
 for.
 
-### Versions not currently provided
+### Node.js command-line version
+
+The CLI uses the same local scanner as the desktop app. With Node.js 22 or
+newer, install the latest GitHub release globally:
+
+```bash
+npm install --global https://github.com/designlook/image-deduper/releases/latest/download/ImageDeduper-Node-CLI.tgz
+image-deduper --help
+```
+
+Or download or clone this repository and run the source directly:
+
+```bash
+node cli.mjs
+node cli.mjs "/path/to/images"
+node cli.mjs --help
+```
+
+A normal run is a preview and never changes files. To delete the listed copies,
+add `--delete`; the CLI asks for confirmation. Use `--delete --yes` only for an
+unattended script where permanent deletion is intentional.
+
+```bash
+# Scan one folder without its subfolders
+node cli.mjs ./images --no-recursive
+
+# Match files created within two hours and at least 500 KB
+node cli.mjs ./images --within 2 --min-size 500KB
+
+# Keep the newest file in each group instead of the oldest
+node cli.mjs ./images --keep newest
+
+# Machine-readable preview
+node cli.mjs ./images --json
+```
+
+Press Ctrl+C once to stop after the current file and see partial results. A
+stopped scan never proceeds to deletion. Run `node cli.mjs -h` for every option.
+
+You can create a global `image-deduper` command from a clone too:
+
+```bash
+npm install --global .
+image-deduper --help
+```
+
+### Version not currently provided
 
 - **Browser-only web app:** Not provided. Browsers do not offer the same reliable
   creation-time metadata and controlled filesystem deletion as the desktop app.
-- **Node.js command-line app:** Not currently published. The scanner is written
-  in Node.js, so a CLI can be added later, but the current public product is the
-  desktop interface.
 
 ## Technology
 

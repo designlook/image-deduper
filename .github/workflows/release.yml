@@ -63,10 +63,18 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
       - uses: actions/download-artifact@v8
         with:
           path: release-assets
           merge-multiple: true
+      - name: Package Node.js CLI
+        run: |
+          npm pack --pack-destination release-assets
+          mv release-assets/image-deduper-*.tgz release-assets/ImageDeduper-Node-CLI.tgz
       - name: Create checksums
         working-directory: release-assets
         run: sha256sum * > SHA256SUMS.txt
