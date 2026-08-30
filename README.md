@@ -11,6 +11,8 @@ are never uploaded.
 > candidate for your review, not proof that two images are visually identical.
 > Always review the previews before deleting files.
 
+**[Try Image Deduper in your browser](https://designforever.com/apps/image-deduper)** — no installation or upload required. The web version uses browser-provided modified dates; use the desktop app or Node CLI when creation-time metadata matters.
+
 ![Image Deduper showing side-by-side duplicate previews and deletion controls](docs/images/image-deduper-ui.png)
 
 *Review matching images side by side and choose exactly which newer copies to delete.*
