@@ -9,6 +9,38 @@ images are never uploaded.
 
 *Review matching images side by side and choose exactly which newer copies to delete.*
 
+## Why Image Deduper?
+
+Many duplicate-photo tools are built around perceptual similarity scores or
+large, multi-purpose disk-cleaning suites. Image Deduper intentionally solves a
+narrower problem: reviewing copy-like image files with a matching size and
+dimensions, then deciding which version should survive.
+
+- **A matching rule you can understand.** Groups use exact byte size and pixel
+  dimensions—not an unexplained similarity percentage.
+- **Keep the age you actually want.** Switch between **Delete newer** and
+  **Delete older**; the app immediately relabels and reselects each group.
+- **Creation-time windows.** Limit matches to files created within 1–12 hours of
+  one another, useful for download batches, exports, and generated-image runs.
+- **Visual review by default.** Every group is shown side by side before any
+  destructive action, with individual files easy to spare.
+- **Designed not to erase the whole group.** The interface protects one image,
+  and the main process independently refuses a request that would delete every
+  file in a group.
+- **Files are rechecked before deletion.** If size, dimensions, or creation time
+  changed after scanning, deletion is refused.
+- **Stop without losing progress.** Cancel a long scan and review the partial
+  results already found.
+- **Local and inspectable.** No uploads, accounts, telemetry, or hidden cloud
+  processing. The source is available under the MIT license.
+
+### When another tool may be better
+
+Image Deduper does not look for resized, recompressed, cropped, rotated, or
+merely similar-looking photos. A perceptual-similarity tool is a better fit for
+those jobs. This app is for strict, understandable candidate grouping followed
+by human review.
+
 ## Download
 
 Download the newest version from the
