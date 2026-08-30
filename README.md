@@ -54,6 +54,48 @@ Download the newest version from the
 
 Checksums are published with every release in `SHA256SUMS.txt`.
 
+## Choose your version
+
+All desktop downloads contain the runtime they need. **Users do not need to
+install Node.js, npm, Electron, or a browser.**
+
+| Version | Use it when | What is included | What you need |
+| --- | --- | --- | --- |
+| Windows x64 installer | You have a typical 64-bit Windows 10 or 11 PC | Image Deduper, Electron, Chromium, and Node.js runtime | Windows 10/11 on an Intel or AMD 64-bit processor |
+| macOS Apple Silicon (`arm64`) | About This Mac shows an Apple M-series chip | Image Deduper, Electron, Chromium, and the ARM64 Node.js runtime | An M1-or-newer Mac and the one-time unsigned-app approval described below |
+| macOS Intel (`x64`) | About This Mac shows an Intel processor | Image Deduper, Electron, Chromium, and the Intel Node.js runtime | An Intel Mac and the one-time unsigned-app approval described below |
+| Source code | You want to inspect, modify, or build the app yourself | JavaScript, HTML, CSS, scanner, packaging configuration, and release workflow | Git, Node.js 22+, and npm; macOS packages must be built on macOS |
+
+The desktop versions have the same interface and scanning features. The only
+difference is the operating system and processor architecture they are built
+for.
+
+### Versions not currently provided
+
+- **Browser-only web app:** Not provided. Browsers do not offer the same reliable
+  creation-time metadata and controlled filesystem deletion as the desktop app.
+- **Node.js command-line app:** Not currently published. The scanner is written
+  in Node.js, so a CLI can be added later, but the current public product is the
+  desktop interface.
+
+## Technology
+
+| Layer | Technology | Purpose |
+| --- | --- | --- |
+| Desktop shell | Electron | Runs the same desktop application on Windows and macOS |
+| User interface | HTML, CSS, and browser JavaScript | Folder controls, filters, previews, selection, and status display |
+| Local runtime | Node.js APIs | Recursively reads folders, checks metadata, reads image headers, and deletes approved files |
+| Image inspection | Dependency-free header parsing | Reads dimensions for PNG, JPEG, GIF, WebP, BMP, and TIFF without uploading images |
+| Security boundary | Electron context isolation and preload bridge | Keeps direct Node.js and filesystem access out of the interface process |
+| Packaging | Electron Forge | Produces the Windows installer and macOS ZIP applications |
+| Windows installer | Squirrel.Windows maker | Installs the x64 Windows desktop application |
+| macOS downloads | Electron Forge ZIP maker | Packages separate Apple Silicon and Intel applications |
+| Release automation | GitHub Actions | Builds all platforms, publishes release files, and generates SHA-256 checksums |
+
+The app does not require a database, server, cloud storage, image upload service,
+or internet connection while scanning. Internet access is only needed to
+download the application or its source.
+
 ## Install
 
 ### Windows
