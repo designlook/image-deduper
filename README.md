@@ -56,9 +56,9 @@ this repository and trust. See [Apple's Open Anyway instructions](https://suppor
      less than the selected number of hours after the oldest match.
    - **Minimum** skips images smaller than the selected KB or MB value.
 4. Use **Stop** to end a long scan and review the partial results.
-5. Review each comparison. The oldest file is protected and newer copies are
-   selected by default.
-6. Clear any checkbox for a file you want to keep.
+5. Choose **Delete newer** to keep the oldest match, or **Delete older** to keep
+   the newest match.
+6. Review each comparison and clear any checkbox for a file you want to keep.
 7. Choose **Delete selected** and confirm.
 
 Deletion is permanent and does not use the Recycle Bin or Trash. Back up

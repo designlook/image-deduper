@@ -96,11 +96,18 @@ ipcMain.handle('delete-duplicates', async (_event, { directory, groups }) => {
   }
   if (!latestScan || directory !== latestScan.directory) throw new Error('Scan the selected folder again.')
   const allowed = new Map(latestScan.groups.flatMap(group =>
-    group.duplicates.map(file => [file.path, group.signature])
+    [group.keeper, ...group.duplicates].map(file => [file.path, group.signature])
   ))
-  const selectionIsValid = groups.every(group =>
-    group.duplicates?.every(file => allowed.get(file.path) === group.signature)
-  )
+  const latestGroups = new Map(latestScan.groups.map(group => [group.signature, group]))
+  const selectionIsValid = groups.every(group => {
+    const latestGroup = latestGroups.get(group.signature)
+    if (!latestGroup || !Array.isArray(group.duplicates)) return false
+    const candidates = new Set([latestGroup.keeper, ...latestGroup.duplicates].map(file => file.path))
+    const selected = new Set(group.duplicates.map(file => file.path))
+    return selected.size === group.duplicates.length &&
+      selected.size < candidates.size &&
+      group.duplicates.every(file => candidates.has(file.path) && allowed.get(file.path) === group.signature)
+  })
   if (!selectionIsValid) throw new Error('The selected files do not match the latest scan.')
 
   const count = groups.reduce((total, group) => total + group.duplicates.length, 0)

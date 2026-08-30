@@ -11,7 +11,8 @@ const elements = {
   minSizeUnit: document.querySelector('#minSizeUnit'),
   deleteButton: document.querySelector('#deleteButton'),
   selectionActions: document.querySelector('#selectionActions'),
-  selectAllCheckbox: document.querySelector('#selectAllCheckbox'),
+  deleteNewerRadio: document.querySelector('#deleteNewerRadio'),
+  deleteOlderRadio: document.querySelector('#deleteOlderRadio'),
   statusText: document.querySelector('#statusText'),
   totalImageCount: document.querySelector('#totalImageCount'),
   duplicateCount: document.querySelector('#duplicateCount'),
@@ -99,14 +100,25 @@ async function loadPreview(frame, filePath) {
 }
 
 function updateSelectionControls() {
-  const total = scanResult?.duplicateCount ?? 0
   const selected = selectedForDeletion.size
-  elements.selectAllCheckbox.checked = total > 0 && selected === total
-  elements.selectAllCheckbox.indeterminate = selected > 0 && selected < total
   elements.deleteButton.disabled = selected === 0
   elements.deleteButton.textContent = selected
     ? `Delete ${selected} selected ${selected === 1 ? 'copy' : 'copies'}`
     : 'Select copies to delete'
+}
+
+function displayGroups(result) {
+  const deleteOlder = elements.deleteOlderRadio.checked
+  return result.groups.map(group => {
+    const files = [group.keeper, ...group.duplicates]
+      .sort((a, b) => a.created - b.created || a.path.localeCompare(b.path))
+    const keeper = deleteOlder ? files.at(-1) : files[0]
+    return {
+      ...group,
+      keeper,
+      duplicates: files.filter(file => file.path !== keeper.path)
+    }
+  })
 }
 
 function fileTile(file, role) {
@@ -153,7 +165,7 @@ function fileTile(file, role) {
   } else {
     const protectedLabel = document.createElement('span')
     protectedLabel.className = 'file-details'
-    protectedLabel.textContent = 'Protected'
+    protectedLabel.textContent = elements.deleteOlderRadio.checked ? 'Newest kept' : 'Oldest kept'
     actions.append(protectedLabel)
   }
   const reveal = document.createElement('button')
@@ -170,12 +182,13 @@ function renderResults(result) {
   elements.duplicateCount.textContent = result.duplicateCount.toLocaleString()
   elements.spaceCount.textContent = formatBytes(result.reclaimableBytes)
   elements.results.replaceChildren()
-  selectedForDeletion = new Set(result.groups.flatMap(group => group.duplicates.map(file => file.path)))
+  const visibleGroups = displayGroups(result)
+  selectedForDeletion = new Set(visibleGroups.flatMap(group => group.duplicates.map(file => file.path)))
 
   if (!result.groups.length) {
     elements.results.hidden = true
     elements.emptyState.hidden = false
-    elements.emptyState.querySelector('p').textContent = result.stopped ? 'Scan stopped.' : 'No newer duplicates found.'
+    elements.emptyState.querySelector('p').textContent = result.stopped ? 'Scan stopped.' : 'No matching copies found.'
     elements.emptyState.querySelector('span').textContent = result.stopped
       ? `${result.totalImages} image${result.totalImages === 1 ? '' : 's'} checked.`
       : result.skipped
@@ -192,7 +205,7 @@ function renderResults(result) {
   elements.selectionActions.hidden = false
   updateSelectionControls()
 
-  for (const group of result.groups) {
+  for (const group of visibleGroups) {
     const card = document.createElement('article')
     card.className = 'result-group'
     const meta = document.createElement('div')
@@ -200,7 +213,7 @@ function renderResults(result) {
     meta.innerHTML = `<span>${group.keeper.width} × ${group.keeper.height} PX</span><span>${formatBytes(group.keeper.size)} EACH</span>`
     const strip = document.createElement('div')
     strip.className = 'comparison-strip'
-    strip.append(fileTile(group.keeper, 'KEEP'))
+    strip.append(fileTile(group.keeper, elements.deleteOlderRadio.checked ? 'KEEP NEWEST' : 'KEEP OLDEST'))
     for (const duplicate of group.duplicates) strip.append(fileTile(duplicate, 'DELETE'))
     card.append(meta, strip)
     elements.results.append(card)
@@ -222,14 +235,8 @@ elements.chooseButton.addEventListener('click', async () => {
   await runScan()
 })
 
-elements.selectAllCheckbox.addEventListener('change', () => {
-  selectedForDeletion = elements.selectAllCheckbox.checked
-    ? new Set(scanResult.groups.flatMap(group => group.duplicates.map(file => file.path)))
-    : new Set()
-  elements.results.querySelectorAll('.file-tile.delete').forEach(tile => tile.classList.toggle('selected', elements.selectAllCheckbox.checked))
-  elements.results.querySelectorAll('.select-copy input').forEach(checkbox => { checkbox.checked = elements.selectAllCheckbox.checked })
-  updateSelectionControls()
-})
+elements.deleteNewerRadio.addEventListener('change', () => renderResults(scanResult))
+elements.deleteOlderRadio.addEventListener('change', () => renderResults(scanResult))
 
 elements.subfoldersCheckbox.addEventListener('change', runScan)
 elements.timeDifferenceCheckbox.addEventListener('change', () => {
@@ -256,7 +263,7 @@ elements.deleteButton.addEventListener('click', async () => {
   if (!scanResult) return
   setBusy(true, 'Waiting for confirmation…')
   try {
-    const selectedGroups = scanResult.groups
+    const selectedGroups = displayGroups(scanResult)
       .map(group => ({ ...group, duplicates: group.duplicates.filter(file => selectedForDeletion.has(file.path)) }))
       .filter(group => group.duplicates.length)
     const result = await window.imageDeduper.deleteDuplicates({

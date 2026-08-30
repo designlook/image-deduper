@@ -11,6 +11,7 @@
 }
 
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }
 
 body {
   margin: 0;
@@ -144,8 +145,14 @@ h1 span { color: var(--cobalt); }
 .section-heading { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
 h2 { margin: 0; font: 700 20px/1 "Arial Narrow", "Segoe UI Variable Display", sans-serif; text-transform: uppercase; letter-spacing: -.02em; }
 .selection-actions { display: flex; align-items: center; gap: 16px; }
-.master-select { display: flex; align-items: center; gap: 8px; color: var(--slate-700); cursor: pointer; font-size: 13px; font-weight: 650; }
-.master-select input, .select-copy input { width: 17px; height: 17px; margin: 0; accent-color: var(--red); cursor: pointer; }
+.deletion-policy { display: flex; align-items: center; margin: 0; padding: 0; overflow: hidden; border: 1px solid var(--slate-300); border-radius: 2px; }
+.deletion-policy legend { float: left; padding: 0 8px; color: var(--slate-700); font: 700 10px/34px Consolas, monospace; letter-spacing: .08em; text-transform: uppercase; }
+.deletion-policy label { cursor: pointer; }
+.deletion-policy input { position: absolute; opacity: 0; pointer-events: none; }
+.deletion-policy span { display: block; min-width: 58px; padding: 0 9px; border-left: 1px solid var(--slate-300); color: var(--slate-700); font-size: 11px; font-weight: 700; line-height: 34px; text-align: center; }
+.deletion-policy input:checked + span { color: white; background: var(--red); }
+.deletion-policy input:focus-visible + span { outline: 3px solid #7ca0ff; outline-offset: -3px; }
+.select-copy input { width: 17px; height: 17px; margin: 0; accent-color: var(--red); cursor: pointer; }
 
 .empty-state {
   display: grid;
