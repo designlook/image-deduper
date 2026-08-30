@@ -1,9 +1,15 @@
 # Image Deduper
 
-Image Deduper finds newer image files that share the exact same byte size and
-pixel dimensions as an older image. Review files side by side, deselect anything
-you want to keep, and delete the selected copies. Everything runs locally;
-images are never uploaded.
+Image Deduper quickly groups image files that share the exact same byte size and
+pixel dimensions. Review them side by side, choose whether to keep the oldest or
+newest, and delete only the copies you select. Everything runs locally; images
+are never uploaded.
+
+> **Important: this is not an exact pixel or image-content comparison—and it is
+> not intended to be.** Image Deduper is lightweight and fast because its only
+> matching signals are exact file size and pixel dimensions. A match is a
+> candidate for your review, not proof that two images are visually identical.
+> Always review the previews before deleting files.
 
 ![Image Deduper showing side-by-side duplicate previews and deletion controls](docs/images/image-deduper-ui.png)
 
@@ -16,8 +22,9 @@ large, multi-purpose disk-cleaning suites. Image Deduper intentionally solves a
 narrower problem: reviewing copy-like image files with a matching size and
 dimensions, then deciding which version should survive.
 
-- **A matching rule you can understand.** Groups use exact byte size and pixel
-  dimensions—not an unexplained similarity percentage.
+- **A lightweight matching rule you can understand.** Groups use only exact byte
+  size and pixel dimensions—not pixels, hashes, computer vision, or an
+  unexplained similarity percentage.
 - **Keep the age you actually want.** Switch between **Delete newer** and
   **Delete older**; the app immediately relabels and reselects each group.
 - **Creation-time windows.** Limit matches to files created within 1–12 hours of
@@ -36,10 +43,11 @@ dimensions, then deciding which version should survive.
 
 ### When another tool may be better
 
-Image Deduper does not look for resized, recompressed, cropped, rotated, or
-merely similar-looking photos. A perceptual-similarity tool is a better fit for
-those jobs. This app is for strict, understandable candidate grouping followed
-by human review.
+Image Deduper does not compare pixels or image content. It does not prove that
+two images are identical, and it does not look for resized, recompressed,
+cropped, rotated, or merely similar-looking photos. A content-hash or
+perceptual-similarity tool is a better fit for those jobs. This app is for fast,
+understandable candidate grouping followed by human review.
 
 ## Download
 

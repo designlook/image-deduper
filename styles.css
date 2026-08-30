@@ -59,6 +59,20 @@ h1 span { color: var(--cobalt); }
 
 .local-note { color: var(--slate-700); font: 700 10px/1 Consolas, monospace; letter-spacing: .12em; }
 
+.match-notice {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 9px 12px;
+  border: 1px solid #a9bae6;
+  border-bottom: 0;
+  color: #30425d;
+  background: #edf3ff;
+  font-size: 11px;
+  line-height: 1.35;
+}
+.match-notice strong { flex: 0 0 auto; color: var(--cobalt); font: 700 10px/1 Consolas, monospace; letter-spacing: .08em; text-transform: uppercase; }
+
 .picker {
   position: relative;
   display: flex;
