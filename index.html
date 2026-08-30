@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:">
+    <title>Image Deduper</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="masthead">
+        <h1>Image <span>Deduper</span></h1>
+        <span class="local-note">LOCAL ONLY</span>
+      </header>
+
+      <section class="picker" id="picker">
+        <div class="scan-beam" aria-hidden="true"></div>
+        <div class="picker-copy">
+          <span class="folder-mark" aria-hidden="true">⌑</span>
+          <div>
+            <p id="folderPath" class="folder-path">No folder selected</p>
+          </div>
+        </div>
+        <div class="picker-actions">
+          <button id="chooseButton" class="button button-secondary">Choose folder</button>
+          <button id="stopButton" class="button button-stop" hidden>Stop</button>
+        </div>
+      </section>
+
+      <section class="scan-options" aria-label="Scan options">
+        <label class="option-control">
+          <input id="subfoldersCheckbox" type="checkbox" checked>
+          <span>Include subfolders</span>
+        </label>
+        <span class="option-divider" aria-hidden="true"></span>
+        <label class="option-control">
+          <input id="timeDifferenceCheckbox" type="checkbox">
+          <span>Created within</span>
+        </label>
+        <select id="timeDifferenceSelect" aria-label="Maximum creation-time difference" disabled>
+          <option value="1">1 hour</option>
+          <option value="2">2 hours</option>
+          <option value="3">3 hours</option>
+          <option value="4">4 hours</option>
+          <option value="5">5 hours</option>
+          <option value="6">6 hours</option>
+          <option value="12">12 hours</option>
+        </select>
+        <span class="option-divider" aria-hidden="true"></span>
+        <label class="option-control">
+          <input id="minSizeCheckbox" type="checkbox">
+          <span>Minimum</span>
+        </label>
+        <input id="minSizeInput" class="size-input" type="number" min="0.01" step="0.1" value="1" aria-label="Minimum file size" disabled>
+        <select id="minSizeUnit" aria-label="Minimum file-size unit" disabled>
+          <option value="KB">KB</option>
+          <option value="MB" selected>MB</option>
+        </select>
+      </section>
+
+      <section class="status-strip" aria-live="polite">
+        <div><span class="status-label">Status</span><strong id="statusText">Ready</strong></div>
+        <div><span class="status-label">Total images</span><strong id="totalImageCount">—</strong></div>
+        <div><span class="status-label">Duplicates found</span><strong id="duplicateCount">—</strong></div>
+        <div><span class="status-label">Space</span><strong id="spaceCount">—</strong></div>
+      </section>
+
+      <section class="results-section">
+        <div class="section-heading">
+          <div>
+            <h2>Duplicates</h2>
+          </div>
+          <div id="selectionActions" class="selection-actions" hidden>
+            <label class="master-select">
+              <input id="selectAllCheckbox" type="checkbox" checked>
+              <span>Select all newer copies</span>
+            </label>
+            <button id="deleteButton" class="button button-danger">Delete selected</button>
+          </div>
+        </div>
+        <div id="emptyState" class="empty-state">
+          <div class="contact-sheet" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+          <p>Choose a folder.</p>
+          <span>PNG · JPEG · GIF · WebP · BMP · TIFF</span>
+        </div>
+        <div id="results" class="results" hidden></div>
+      </section>
+    </main>
+    <script src="renderer.js"></script>
+  </body>
+</html>
