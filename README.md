@@ -5,6 +5,10 @@ pixel dimensions as an older image. Review files side by side, deselect anything
 you want to keep, and delete the selected copies. Everything runs locally;
 images are never uploaded.
 
+![Image Deduper showing side-by-side duplicate previews and deletion controls](docs/images/image-deduper-ui.png)
+
+*Review matching images side by side and choose exactly which newer copies to delete.*
+
 ## Download
 
 Download the newest version from the
