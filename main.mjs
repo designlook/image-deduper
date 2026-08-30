@@ -1,4 +1,5 @@
 import { app, BrowserWindow, dialog, ipcMain, nativeImage, shell } from 'electron'
+import { spawn } from 'node:child_process'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { scanDirectory, deleteDuplicates } from './scanner.mjs'
@@ -8,6 +9,29 @@ let mainWindow
 let previewableFiles = new Set()
 let latestScan = null
 let activeScan = null
+
+function handleSquirrelEvent() {
+  if (process.platform !== 'win32') return false
+  const event = process.argv[1]
+  if (!event?.startsWith('--squirrel-')) return false
+
+  const updateExe = path.resolve(path.dirname(process.execPath), '..', 'Update.exe')
+  const executableName = path.basename(process.execPath)
+  let args
+  if (event === '--squirrel-install' || event === '--squirrel-updated') args = ['--createShortcut', executableName]
+  else if (event === '--squirrel-uninstall') args = ['--removeShortcut', executableName]
+  else if (event === '--squirrel-obsolete') {
+    app.quit()
+    return true
+  } else return false
+
+  const update = spawn(updateExe, args, { detached: true })
+  update.on('close', () => app.quit())
+  update.on('error', () => app.quit())
+  return true
+}
+
+const handlingSquirrelEvent = handleSquirrelEvent()
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -130,12 +154,14 @@ ipcMain.handle('show-file', async (_event, filePath) => {
   if (typeof filePath === 'string' && previewableFiles.has(filePath)) shell.showItemInFolder(filePath)
 })
 
-app.whenReady().then(() => {
-  createWindow()
-  app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) createWindow()
+if (!handlingSquirrelEvent) {
+  app.whenReady().then(() => {
+    createWindow()
+    app.on('activate', () => {
+      if (BrowserWindow.getAllWindows().length === 0) createWindow()
+    })
   })
-})
+}
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit()
